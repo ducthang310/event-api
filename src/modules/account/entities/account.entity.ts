@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { AccountStatusEnum } from '../constants';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'accounts' })
 @Unique(['email'])
@@ -21,15 +22,15 @@ export class Account {
   @Column({ nullable: false })
   email: string;
 
-  @Column({ nullable: true })
-  password?: string;
-
+  @Exclude({ toPlainOnly: true })
   @Column({ nullable: false })
   verification_code?: string;
 
+  @Exclude({ toPlainOnly: true })
   @Column({ nullable: true, type: 'timestamp' })
   verification_code_created_at?: Date;
 
+  @Exclude({ toPlainOnly: true })
   @Column({ nullable: true, type: 'timestamp' })
   verification_code_verified_at?: Date;
 
@@ -46,6 +47,7 @@ export class Account {
   @UpdateDateColumn()
   updated_at: Date;
 
+  @Exclude({ toPlainOnly: true })
   @DeleteDateColumn({ nullable: true })
   deleted_at?: Date;
 }

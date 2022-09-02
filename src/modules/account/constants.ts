@@ -1,5 +1,5 @@
 export enum AccountStatusEnum {
-  Pending = 0,
-  Active = 1,
-  Suspended = 2,
+  Pending = 'pending',
+  Active = 'active',
+  Suspended = 'suspended',
 }

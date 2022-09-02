@@ -1,6 +1,6 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { TrimPipe } from './common/pipes/trim.pipe';
 import { json, urlencoded } from 'express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -13,6 +13,9 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
     }),
+  );
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(
+    app.get(Reflector)),
   );
   app.use(json({ limit: '20mb' }));
   app.use(urlencoded({ limit: '20mb', extended: true }));

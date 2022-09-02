@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from '../entities/account.entity';
-import { Repository } from 'typeorm';
+import { Equal, Not, Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto/create-account.dto';
 import { UpdateAccountDto } from '../dto/update-account.dto';
 
@@ -12,20 +12,53 @@ export class AccountService {
     private accountRepository: Repository<Account>,
   ) {}
 
-  create(createAccountDto: CreateAccountDto) {
-    return 'This action adds a new account';
+  async create(dto: CreateAccountDto): Promise<Account> {
+    const { email } = dto;
+    const account: Account = await this.findByEmail(email);
+
+    if (account) {
+      throw new BadRequestException(`The email (${email}) has already been registered.`);
+    }
+
+    return this.accountRepository.save(dto);
   }
 
-  findAll() {
-    return `This action returns all account`;
+  async findAll(): Promise<Account[]> {
+    return this.accountRepository.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
+  async findOne(id: number, reject?: boolean): Promise<Account> {
+    const account = await this.accountRepository.findOne({
+      where: { id },
+    });
+    if (!account && reject) {
+      throw new NotFoundException('The account does not exist');
+    }
+    return account;
   }
 
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} account`;
+  async findByEmail(email: string, reject?: boolean): Promise<Account> {
+    email = email.toLowerCase().trim();
+    const account: Account = await this.accountRepository.findOne({
+      where: { email: email },
+    });
+    if (!account && reject) {
+      throw new NotFoundException(`The account (${email}) does not exist`);
+    }
+    return account;
+  }
+
+  async update(id: number, dto: UpdateAccountDto) {
+    const account = await this.findOne(id, true);
+    if (dto.email) {
+      const existingAccount = await this.accountRepository.findOne({
+        where: { id: Not(Equal(id)), email: dto.email },
+      });
+      if (existingAccount) {
+        throw new BadRequestException(`The email (${dto.email}) has already been registered.`);
+      }
+    }
+    return this.accountRepository.update({ id: account.id }, dto);
   }
 
   remove(id: number) {

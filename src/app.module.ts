@@ -23,6 +23,7 @@ import { AccountModule } from './modules/account/account.module';
         entities: [__dirname + '/modules/**/*.entity{.ts,.js}'],
         namingStrategy: new SnakeNamingStrategy(),
         logging: configService.get('DATABASE_LOGGING') === 'true',
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
