@@ -14,4 +14,8 @@ export default interface EnvironmentVariables {
 
   AWS_SES_MAIL_FROM_ADDRESS: string;
   AWS_SES_MAIL_FROM_NAME: string;
+
+  AWS_ACCESS_KEY_ID: string;
+  AWS_SECRET_ACCESS_KEY: string;
+  AWS_REGION: string;
 }

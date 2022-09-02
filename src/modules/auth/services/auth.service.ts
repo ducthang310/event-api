@@ -7,6 +7,7 @@ import { Account } from '../../account/entities/account.entity';
 import { JWT_EXPIRES_IN_SECONDS_DEFAULT_VALUE } from '../constants';
 import { ResultOfVerification } from '../../account/interfaces';
 import { RequestToLogInDto } from '../dto/request-to-log-in.dto';
+import { NotificationService } from '../../notification/notification.service';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,7 @@ export class AuthService {
     private accountService: AccountService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private notificationService: NotificationService,
   ) {}
 
   /**
@@ -35,9 +37,10 @@ export class AuthService {
   async sendNotification(
     email: string,
   ): Promise<ResultOfVerification> {
+    email = email.toLowerCase().trim();
     const account: Account = await this.accountService.findByEmail(email, true);
     const tokenInfo = await this.createVerificationResponse(account);
-    // Send Email
+    await this.notificationService.sendMail(email, tokenInfo);
     return tokenInfo;
   }
 

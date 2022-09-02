@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
       }),
       inject: [ConfigService],
     }),
+    NotificationModule,
   ],
   controllers: [AuthController],
   providers: [
