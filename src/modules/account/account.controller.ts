@@ -13,7 +13,10 @@ export class AccountController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.accountService.findOne(+id, true);
+    if (!isNaN(Number(id))) {
+      return this.accountService.findOne(+id, true);
+    }
+    return this.accountService.findByEmail(id, true);
   }
 
   @Patch(':id')
