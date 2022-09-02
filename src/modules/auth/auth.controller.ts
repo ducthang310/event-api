@@ -10,6 +10,7 @@ import { Account } from '../account/entities/account.entity';
 import { SignUpDto } from './dto/sign-up.dto';
 import { RequestWithUser } from './interfaces';
 import { ResultOfVerification } from '../account/interfaces';
+import { RequestToLogInDto } from './dto/request-to-log-in.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,13 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a new account' })
   async register(@Body() dto: SignUpDto): Promise<{ account: Account; tokenInfo: ResultOfVerification }> {
     return this.authService.signUp(dto);
+  }
+
+  @Public()
+  @Post('request-login')
+  @ApiOperation({ summary: 'Register a new account' })
+  async requestLogin(@Body() dto: RequestToLogInDto): Promise<any> {
+    return this.authService.requestToLogIn(dto);
   }
 
   @Get('me')

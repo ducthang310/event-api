@@ -20,7 +20,10 @@ export class AccountService {
       throw new BadRequestException(`The email (${email}) has already been registered.`);
     }
 
-    return this.accountRepository.save(dto);
+    return this.accountRepository.save({
+      ...dto,
+      email: email.toLowerCase().trim(),
+    });
   }
 
   async findAll(): Promise<Account[]> {

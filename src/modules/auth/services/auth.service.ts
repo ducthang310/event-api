@@ -6,6 +6,7 @@ import { SignUpDto } from '../dto/sign-up.dto';
 import { Account } from '../../account/entities/account.entity';
 import { JWT_EXPIRES_IN_SECONDS_DEFAULT_VALUE } from '../constants';
 import { ResultOfVerification } from '../../account/interfaces';
+import { RequestToLogInDto } from '../dto/request-to-log-in.dto';
 
 @Injectable()
 export class AuthService {
@@ -64,5 +65,12 @@ export class AuthService {
         new Date().getTime() + expiresInMilliseconds,
       ).toISOString(),
     };
+  }
+
+  async requestToLogIn(dto: RequestToLogInDto) {
+    const { email } = dto;
+    await this.accountService.findByEmail(email);
+    await this.sendNotification(email);
+    return { message: `A verification email has just been sent to ${email}. Please check that.` };
   }
 }
