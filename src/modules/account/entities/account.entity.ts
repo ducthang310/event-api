@@ -22,18 +22,6 @@ export class Account {
   @Column({ nullable: false })
   email: string;
 
-  @Exclude({ toPlainOnly: true })
-  @Column({ nullable: false })
-  verification_code?: string;
-
-  @Exclude({ toPlainOnly: true })
-  @Column({ nullable: true, type: 'timestamp' })
-  verification_code_created_at?: Date;
-
-  @Exclude({ toPlainOnly: true })
-  @Column({ nullable: true, type: 'timestamp' })
-  verification_code_verified_at?: Date;
-
   @Column({
     type: 'enum',
     enum: AccountStatusEnum,
