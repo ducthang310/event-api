@@ -18,7 +18,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+
+    "aws:login": "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 048366073589.dkr.ecr.ap-southeast-1.amazonaws.com",
+    "docker:build": "docker build -t event-api .",
+    "docker:tag": "docker tag event-api:latest 048366073589.dkr.ecr.ap-southeast-1.amazonaws.com/event-api:latest",
+    "docker:push": "docker push 048366073589.dkr.ecr.ap-southeast-1.amazonaws.com/event-api:latest",
+    "aws:build": "npm run aws:login && npm run docker:build && npm run docker:tag && npm run docker:push"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.163.0",
